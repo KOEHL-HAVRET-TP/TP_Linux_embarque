@@ -1,1 +1,4 @@
-# TP_Linux_embarqu-
+# TP_Linux_embarqué
+
+IP de notre carte : 
+
