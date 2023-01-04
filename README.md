@@ -1,4 +1,4 @@
-__# TP_Linux_embarqué
+# TP_Linux_embarqué
 __Membres du binôme__  
 Loïcia KOEHL  
 Alix HAVRET 
