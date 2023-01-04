@@ -1,9 +1,10 @@
-# TP_Linux_embarqué
+__# TP_Linux_embarqué
 __Membres du binôme__  
 Loïcia KOEHL  
 Alix HAVRET 
 
 ## 1 - Prise en main 
+### Préparation carte SD, connexion série et SSH avec la carte VEEK-MT2S
 Dans un premier temps nous avons flashé la carte SD avec Win32DiskImager.  
 Une fois la carte SD insérée dans la carte __VEEK-MT2S__ le démarrage c'est déroulé sans problème.  
 
@@ -16,7 +17,7 @@ Seconde adresse :192.168.88.226
 
 Une fois la connexion SSH établie et la découverte des fichiers bien entamée nous avons testé la compilation croisée avec un programme "Hello World".  
 
-__Principe de la cross-compilation :__   
+### Cross-compilation  
 
 On compile notre programme dans la VM pour le processeur ARM donc le gcc est différent il faut mettre __arm-linux-gnueabihf-gcc hello.c -o hello.o__. Cela nous permet d'avoir un fichier executable.  Mais le programme une fois compilé sera executable sur le SoC mais pas sur la VM.  
 
@@ -26,9 +27,20 @@ En effet le gcc de la liaison ssh est un gcc arm, on aurait pu compiler directem
 Pour finir, on envoie sur le SoC le fichier compilé , donc on utilise la VM avec la commande suivante :  
 Scp <nomdufichier> root@<IP_VEEK>:~ (chemin ou le fichier sera placé dans le SoC)
 
+### Chenillard 
+  
+  Wesh bas j'ai pas les codes   
+  mais il est réussi :)  
+  
+## 2 - Modules kernel  
+Je sais plus c'était quoi les codes ..
+  
+On lance le makefile qui crée le_module.ko.  
+Une fois le module crée on le charge avec __sudo insmod le_module.ko__ et on envoie le message avec __sudo dmesg__ .  
+Si le module a bien été crée et chargé alors s'affichent les messages émis par les modules 
 
-## 2 - 
+### CrossCompilation de modules noyau 
+  
+## 3 - Device tree
 
-## 
-IP de notre carte : 
-
+  
