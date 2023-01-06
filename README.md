@@ -14,6 +14,8 @@ La carte dispose d'une adresse IP, obtenu grace à la commande **ipconfig**, le 
 
 Première adresse : 192.168.88.243  
 Seconde adresse :192.168.88.226   
+Troisième adresse :192.168.88.210 
+Quatrième adresse :192.168.88.202
 
 Une fois la connexion SSH établie et la découverte des fichiers bien entamée nous avons testé la compilation croisée avec un programme "Hello World".  
 
@@ -25,7 +27,7 @@ Si on lance un gcc 'simple' sur la VM il sera executable sur la VM et pas sur le
 En effet le gcc de la liaison ssh est un gcc arm, on aurait pu compiler directement dessus mais c’est plus lent. 
 
 Pour finir, on envoie sur le SoC le fichier compilé , donc on utilise la VM avec la commande suivante :  
-Scp <nomdufichier> root@<IP_VEEK>:~ (chemin ou le fichier sera placé dans le SoC)
+scp <nomdufichier> root@<IP_VEEK>:~ (chemin ou le fichier sera placé dans le SoC)
 
 ### Chenillard 
   
