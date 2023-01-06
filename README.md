@@ -44,5 +44,7 @@ Si le module a bien été crée et chargé alors s'affichent les messages émis 
 ### CrossCompilation de modules noyau 
   
 ## 3 - Device tree
+definition device tree : strcuture de données qui contient les composants qui seront utilisés par le système d'exploitation.  
 
+  Dans un premier temps on modifie le fichier .dts en remplacant une 
   
