@@ -43,8 +43,30 @@ Si le module a bien été crée et chargé alors s'affichent les messages émis 
 
 ### CrossCompilation de modules noyau 
   
+  
+  
+### Chenillard
+  
+  
 ## 3 - Device tree
 definition device tree : strcuture de données qui contient les composants qui seront utilisés par le système d'exploitation.  
 
   Dans un premier temps on modifie le fichier .dts en remplacant une 
   
+  
+  ### fichier gpio-leds 
+  
+  export CROSS_COMPILE=<chemin_arm-linux-gnueabihf-> 
+  
+  export ARCH=arm
+  
+  
+  Rôles des fonctions : 
+  
+  __probe__ : la fonction permet d'allouer de la mémoire pour les leds, de bloquer les autres utilisateurs pour l'accès à cette mémoire et aussi d'allumer l'ensemble des leds.  
+  
+  __read__ : permet de lire le caractère donné pour LED et de la copier dans un registre adapté. Si la copie échoue, alors une erreur est envoyée. La fonction s'arrête quand l'ensemble des élèments ont été copié.  
+  
+  __write__ : permet de remplir la strcuture de données ensea_led_dev avec les données du fichier private_data,de manière sécurisée. On stock dans success la copie de ces valeurs, si success vaut 0 alors on écrit les données dans les registres pour mettre à jour la valeur des LEDS et donc programmer leur allumage. Elle renvoit ce que l'on a donnée en entrée si la fonctione c'est bien déroulée.  
+  
+  __remove__: Ecrit 0 dans chaque registre des LEDS, les LEDS s'éteignent toutes. Et supprime le dossier crée dans l'initialisation avec les valeurs choisies pour les LEDS.  
