@@ -14,8 +14,9 @@ La carte dispose d'une adresse IP, obtenu grace à la commande **ipconfig**, le 
 
 Première adresse : 192.168.88.243  
 Seconde adresse :192.168.88.226   
-Troisième adresse :192.168.88.210 
+Troisième adresse :192.168.88.210  
 Quatrième adresse :192.168.88.202
+Cinquième adresse : 192.168.88.192
 
 Une fois la connexion SSH établie et la découverte des fichiers bien entamée nous avons testé la compilation croisée avec un programme "Hello World".  
 
