@@ -17,6 +17,7 @@ Seconde adresse :192.168.88.226
 Troisième adresse :192.168.88.210  
 Quatrième adresse :192.168.88.202
 Cinquième adresse : 192.168.88.192
+Sixième adresse : 192.168.88.187
 
 Une fois la connexion SSH établie et la découverte des fichiers bien entamée nous avons testé la compilation croisée avec un programme "Hello World".  
 
@@ -30,6 +31,9 @@ En effet le gcc de la liaison ssh est un gcc arm, on aurait pu compiler directem
 Pour finir, on envoie sur le SoC le fichier compilé , donc on utilise la VM avec la commande suivante :  
 scp <nomdufichier> root@<IP_VEEK>:~ (chemin ou le fichier sera placé dans le SoC)
 
+  
+  
+  
 ### Chenillard 
   
   Wesh bas j'ai pas les codes   
@@ -44,6 +48,10 @@ Si le module a bien été crée et chargé alors s'affichent les messages émis 
 
 ### CrossCompilation de modules noyau 
   
+   
+  Lignes à lancer avant chaque compilation sur la VM
+  export CROSS_COMPILE=/usr/bin/arm-linux-gnueabihf- 
+  export ARCH=arm
   
   
 ### Chenillard
@@ -57,10 +65,8 @@ definition device tree : strcuture de données qui contient les composants qui s
   
   ### fichier gpio-leds 
   
-  export CROSS_COMPILE=<chemin_arm-linux-gnueabihf-> 
   
-  export ARCH=arm
-  
+
   
   Rôles des fonctions : 
   
