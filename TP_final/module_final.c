@@ -5,6 +5,16 @@
 #include <linux/fs.h>
 #include <linux/types.h>
 #include <linux/uaccess.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/proc_fs.h>
+#include <asm/uaccess.h>
+#include <linux/timer.h>
+
+
+#define DRIVER_AUTHOR "Loicia et Alix"
+#define DRIVER_DESC "Module Final"
+#define DRIVER_LICENSE "GPL"
 
 // Prototypes
 static int leds_probe(struct platform_device *pdev);
@@ -19,6 +29,8 @@ struct ensea_leds_dev {
     u8 leds_value;
 };
 
+struct ensea_leds_dev *dev;
+
 // Specify which device tree devices this driver supports
 static struct of_device_id ensea_leds_dt_ids[] = {
     {
@@ -29,6 +41,7 @@ static struct of_device_id ensea_leds_dt_ids[] = {
 
 // Inform the kernel about the devices this driver supports
 MODULE_DEVICE_TABLE(of, ensea_leds_dt_ids);
+
 
 // Data structure that links the probe and remove functions with our driver
 static struct platform_driver leds_platform = {
@@ -48,10 +61,38 @@ static const struct file_operations ensea_leds_fops = {
     .write = leds_write
 };
 
+// Variables
+static int vitesse;
+static char pattern = 0x01;
+
+// Parametre du module 
+module_param(vitesse, int, 0);
+MODULE_PARM_DESC(vitesse, "La vitesse de ce module");
+
+// Timer 
+
+#define INTERVALLE 100
+
+static struct timer_list my_timer;
+
+// fonction callback du timer
+static void montimer(struct timer_list *t) {
+    printk("Hello (%ld)", jiffies);
+    pattern = (pattern<<7) || (pattern>>1); 
+    dev->leds_value = pattern; //on doit mettre le pattern repere dans le fichier /dev/ensea-leds
+    iowrite32(dev->leds_value, dev->regs);
+    /* Il faut réarmer le timer si l'on veut un appel périodique */
+    mod_timer(&my_timer,jiffies + INTERVALLE);
+
+}
+
+
 // Called when the driver is installed
 static int leds_init(void)
 {
     int ret_val = 0;
+    int ret; 
+
     pr_info("Initializing the Ensea LEDs module\n");
 
     // Register our driver with the "Platform Driver" bus
@@ -63,6 +104,16 @@ static int leds_init(void)
 
     pr_info("Ensea LEDs module successfully initialized!\n");
 
+    pr_info("Timer module loaded\n");
+
+    setup_timer(&my_timer,montimer,0);
+
+    pr_info("Setup timer to fire in 2s (%ld)\n", jiffies);
+
+    ret = mod_timer(&my_timer, jiffies + INTERVALLE);
+    if(ret){
+        pr_err("Timer firing failed\n");
+    }
     return 0;
 }
 
@@ -71,7 +122,7 @@ static int leds_init(void)
 static int leds_probe(struct platform_device *pdev)
 {
     int ret_val = -EBUSY;
-    struct ensea_leds_dev *dev;
+    
     struct resource *r = 0;
 
     pr_info("leds_probe enter\n");
@@ -94,7 +145,7 @@ static int leds_probe(struct platform_device *pdev)
         goto bad_ioremap;
 
     // Turn the LEDs on (access the 0th register in the ensea LEDs module)
-    dev->leds_value = 0x11;
+    dev->leds_value = pattern; //on doit mettre le pattern repere dans le fichier /dev/ensea-leds
     iowrite32(dev->leds_value, dev->regs);
 
     // Initialize the misc device (this is used to create a character file in userspace)
@@ -212,14 +263,25 @@ static int leds_remove(struct platform_device *pdev)
 // Called when the driver is removed
 static void leds_exit(void)
 {
+    
     pr_info("Ensea LEDs module exit\n");
 
     // Unregister our driver from the "Platform Driver" bus
     // This will cause "leds_remove" to be called for each connected device
     platform_driver_unregister(&leds_platform);
 
+    int ret;
+    ret = del_timer(&my_timer);
+    if(ret){
+        pr_err("The timer is still in use ...\n");
+    }
+    pr_info("Timer desactivated\n");
+
+
     pr_info("Ensea LEDs module successfully unregistered\n");
 }
+
+
 
 // Tell the kernel which functions are the initialization and exit functions
 module_init(leds_init);
