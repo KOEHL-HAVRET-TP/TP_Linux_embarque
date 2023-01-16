@@ -18,6 +18,7 @@ Troisième adresse :192.168.88.210
 Quatrième adresse :192.168.88.202
 Cinquième adresse : 192.168.88.192
 Sixième adresse : 192.168.88.187
+Septième adresse : 192.168.88.175
 
 Une fois la connexion SSH établie et la découverte des fichiers bien entamée nous avons testé la compilation croisée avec un programme "Hello World".  
 
@@ -66,7 +67,8 @@ definition device tree : strcuture de données qui contient les composants qui s
   ### fichier gpio-leds 
   
   
-
+%x = affichage en hexa
+%2x = affichage en hexa mais forcer pour avoir 2 caractères 
   
   Rôles des fonctions : 
   
@@ -77,3 +79,13 @@ definition device tree : strcuture de données qui contient les composants qui s
   __write__ : permet de remplir la strcuture de données ensea_led_dev avec les données du fichier private_data,de manière sécurisée. On stock dans success la copie de ces valeurs, si success vaut 0 alors on écrit les données dans les registres pour mettre à jour la valeur des LEDS et donc programmer leur allumage. Elle renvoit ce que l'on a donnée en entrée si la fonctione c'est bien déroulée.  
   
   __remove__: Ecrit 0 dans chaque registre des LEDS, les LEDS s'éteignent toutes. Et supprime le dossier crée dans l'initialisation avec les valeurs choisies pour les LEDS.  
+
+
+
+
+
+
+### TP final 
+
+Dans fonction script_pattern_write  
+Dans l'exucution on met un décimal (un entier), il va être récupéré, puis avec atoi on trasnforme notre chaine de caractère obtenu en entier, cet entier est ensuite transformé en decimal .  
