@@ -63,7 +63,7 @@ __Definition device tree__ : structure de données qui contient les composants q
   
   ## fichier gpio-leds 
  
-  Rôles des fonctions : 
+  ### Rôles des fonctions : 
   
   __probe__ : la fonction permet d'allouer de la mémoire pour les leds, de bloquer les autres utilisateurs pour l'accès à cette mémoire et aussi d'allumer l'ensemble des leds.  
   
@@ -75,14 +75,38 @@ __Definition device tree__ : structure de données qui contient les composants q
 
 
 
-## TP final 
+# TP final 
+  
+  ## Objectifs 
+Réaliser un chenillard qui rempli les conditions suivantes :  
+  — Choix de la vitesse de balayage par une option au moment du chargement du module  
+  — Récupération de la vitesse courante par lecture du fichier /proc/ensea/speed   
+  — Modification de la patern par écriture dans le fichier /dev/ensea-led   
+  — Récupération du patern courant par lecture du fichier /dev/ensea-led   
+  — Modification du sens de balayage par écriture du fichier /proc/ensea/dir   
+  — Récupération du sens de balayage par lecture du fichier /proc/ensea/dir   
+ 
+  Nous utiliserons un Timer pour la réalisation du chenillard.  
+  
+### Fonctions contenues dans le dossier TP Final 
+  - Module principal : __module_final.c__
+  - Script supplémentaire d'écriture dans un ficher : __script_pattern_write.c__
+  - Script supplémentaire de lecture dans un ficher : __script_pattern_read.c__  
+  
+Nous sommes partis du module gpio_leds.c pour créer notre module_final.c .  
+Nous avons créé un Timer logiciel, __my_timer__ qui à chaque Tick décale notre pattern d'un bit (donc décalage de l'allumage d'une LED) vers la droite.  
+Ce décalage a lieu dans la fonction CallBack de notre timer qui se nomme __montimer__.   
+Dans l'init du module, fonction appelée quand le driver est installé,  on setup le timer.  
+A la fin de cette dernière, nous devons relancer le timer obligatoirement, avec la fonction __mod_timer__ pour avoir un appel périodique du timer.  
 
-Dans fonction script_pattern_write  
-Dans l'exucution on met un décimal (un entier), il va être récupéré, puis avec atoi on trasnforme notre chaine de caractère obtenu en entier, cet entier est ensuite transformé en decimal .  
+Afin de pouvoir lire et écrire dans ensea_leds qui contient notre pattern (la séquence d'allumage des LEDS de la carte VEEK), nous créons 2 scripts car nous ne voulons pas utiliser les fonctions __cat__ et __echo__ pour lire et écrire dans les fichiers en mode utilisateur.   
 
+ __Resumé des objectifs remplis pour ce chenillard :__  
+ Le chenillard fonctionne en chargeant le module et nous pouvons inclure un paramètre de type "vitesse" dans le chargement du module.  
+ Nous pouvons écrire et lire dans le fichier ensea_leds qui contient le pattern envoyé aux LEDS (qui permet leur allumage en mode utilisateur).  
+ Le pattern ne peut pas encore être changé en temps réel en mode utilisateur.  
 
-
-## Annexes : Commande complémentaire 
-%x = affichage en hexa
+## Annexes : Commandes complémentaires 
+%x = affichage en hexa  
 %2x = affichage en hexa mais forcer pour avoir 2 caractères 
   
