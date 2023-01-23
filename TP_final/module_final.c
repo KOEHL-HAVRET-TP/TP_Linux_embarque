@@ -42,6 +42,8 @@ static struct of_device_id ensea_leds_dt_ids[] = {
 // Inform the kernel about the devices this driver supports
 MODULE_DEVICE_TABLE(of, ensea_leds_dt_ids);
 
+//DEFINE_TIMER(my_timer,montimer,0,0);
+
 
 // Data structure that links the probe and remove functions with our driver
 static struct platform_driver leds_platform = {
@@ -61,9 +63,16 @@ static const struct file_operations ensea_leds_fops = {
     .write = leds_write
 };
 
+// The file operations that can be performed on the ensea-led character file = pattern
+static const struct file_operations pattern_fops = {
+    .owner = THIS_MODULE,
+    .read = pattern_read,
+    .write = pattern_write
+};
+
 // Variables
 static int vitesse;
-static char pattern = 0x01;
+static char pattern = 0x07;
 
 // Parametre du module 
 module_param(vitesse, int, 0);
@@ -77,14 +86,18 @@ static struct timer_list my_timer;
 
 // fonction callback du timer
 static void montimer(struct timer_list *t) {
-    printk("Hello (%ld)", jiffies);
-    pattern = (pattern<<7) || (pattern>>1); 
+    printk("Hello (%ld)\n", jiffies);
+    printk("Pattern : 0x%2x\n", pattern);
+    pattern = (pattern << 7) | (pattern >> 1); 
+    //pattern+=1;
     dev->leds_value = pattern; //on doit mettre le pattern repere dans le fichier /dev/ensea-leds
     iowrite32(dev->leds_value, dev->regs);
     /* Il faut réarmer le timer si l'on veut un appel périodique */
     mod_timer(&my_timer,jiffies + INTERVALLE);
 
 }
+
+
 
 
 // Called when the driver is installed
@@ -111,6 +124,7 @@ static int leds_init(void)
     pr_info("Setup timer to fire in 2s (%ld)\n", jiffies);
 
     ret = mod_timer(&my_timer, jiffies + INTERVALLE);
+
     if(ret){
         pr_err("Timer firing failed\n");
     }
